@@ -1,0 +1,5 @@
+.box-shadow {
+    box-shadow: 0px 5px 5px rgba(0, 0, 0 0.2);
+}
+
+/* 0 en "x"   5 en "y"   5 en "spread"   y color rgba */
