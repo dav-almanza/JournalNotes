@@ -1,11 +1,12 @@
-import { MailOutline } from "@mui/icons-material"
-import { Typography } from "@mui/material"
+import { JournalLayout } from "../layout/JournalLayout"
+import { NothingSelectedView } from "../views"
 
 export const JournalHomePage = () => {
   return (
-    <>
-      <Typography variant="h1">JournalHomeyPage</Typography>
-      <MailOutline/>
-    </>
+    <JournalLayout>
+      {/* <Typography variant="h1">JournalHomeyPage</Typography> */}
+      {/* <MailOutline/> */}
+      <NothingSelectedView/>
+    </JournalLayout>
   )
 }
