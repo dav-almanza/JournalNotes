@@ -1,11 +1,16 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 import { TurnedInNot } from "@mui/icons-material"
 import { Box, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
+import { useMemo } from "react";
+import { setActiveNote } from "../../store/journal/journalSlice";
+
 
 export const SideBar = ({drawerWidth = 280}) => {
-
-    const {displayName} = useSelector( state => state.auth )
+    
+    // HOOKS
+    const { displayName } = useSelector( state => state.auth );
+    const { notes }       = useSelector( state => state.journal );
 
   return (
     <Box
@@ -25,31 +30,46 @@ export const SideBar = ({drawerWidth = 280}) => {
                    { displayName }
                 </Typography>
             </Toolbar>
+
             <Divider/>
 
             <List>
-                { 
-                    ['January', 'February', 'March', 'April'].map( text => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <TurnedInNot/>
-                                </ListItemIcon>
-                                <Grid container direction={'column'}>
-                                    <ListItemText primary={text} />
-                                    <ListItemText secondary={'Lorem dssd dsjnjkd'} />
-                                </Grid>
-                            </ListItemButton>
-                         </ListItem>   
-                    ))
-                }
+                { notes.map( note => (
+                    <SideBarItem key={note.id} {...note} />    
+                )) }
             </List>
-
         </Drawer>
-
     </Box>
   )
 }
 
 // ModalProps={{ keepMounted }}
 // 
+
+export const SideBarItem = ({ title = '', body, id, date, imageUrls = [] }) => {
+
+    const dispatch = useDispatch();
+
+    const newTitle = useMemo( () => {
+        return title.length > 17
+                ? title.substring(0,17) + '...'
+                : title;
+    }, [title]);
+
+    return (
+        <ListItem 
+            disablePadding
+            onClick={ () => dispatch( setActiveNote({ title, body, id, date, imageUrls }) )}
+        >
+            <ListItemButton>
+                <ListItemIcon>
+                    <TurnedInNot/>
+                </ListItemIcon>
+                <Grid container direction={'column'}>
+                    <ListItemText primary={ newTitle } />
+                    <ListItemText secondary={ body } />
+                </Grid>
+            </ListItemButton>
+        </ListItem>   
+    )
+}

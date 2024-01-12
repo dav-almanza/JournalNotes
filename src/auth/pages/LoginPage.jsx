@@ -11,16 +11,18 @@ import { useForm } from '../../hooks';
 import { startGoogleSignIn, startLoginEmailPassword } from '../../store/auth';
 
 
+const formData = {
+  email: '',
+  password: '',
+};
+
 export const LoginPage = () => {
 
   // HOOKS
   const {status, errorMessage} = useSelector( state => state.auth);
   const dispatch = useDispatch();
 
-  const { email, password, formState, onInputChange } = useForm({
-    email: '',
-    password: '',
-  });
+  const { email, password, formState, onInputChange } = useForm( formData );
 
   // const isAuthenticating = useMemo( () => status === 'checking', [status]);
 

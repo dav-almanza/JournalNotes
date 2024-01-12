@@ -8,6 +8,11 @@ export const useForm = ( initialForm = {}, formValidations = {} ) => {
     useEffect(() => {
       validators();
     }, [formState]);  // cuando hay un cambio en los inputs se ejecutan las validaciones...
+
+    useEffect(() => {
+      setFormState( initialForm );
+    }, [initialForm])
+    
     
     const validators = () => {
         const checkedValues = {};
