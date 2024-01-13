@@ -1,4 +1,5 @@
 import { loginEmailPassword, logoutFirebase, registerEmailPassword, signInWithGoogle } from '../../firebase/providers';
+import { clearNotes } from '../journal/journalSlice';
 import { checkingCredentials, login, logout } from "./authSlice"
 
 export const checkingAuthentication = (email, password) => {
@@ -40,6 +41,7 @@ export const startLoginEmailPassword = ({ email, password }) => {
 export const startFirebaseLogout = () => {
     return async(dispatch) => {
         await logoutFirebase();
+        dispatch( clearNotes() );  //esta accion es para "journal", y este Thunks es de "auth"... cambiar luego 
         dispatch( logout() ); 
     }
 }

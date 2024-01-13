@@ -42,7 +42,6 @@ export const useForm = ( initialForm = {}, formValidations = {} ) => {
         setFormState( initialForm );
     }
 
-
     return {
         formState,
         ...formState,

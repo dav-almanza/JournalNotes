@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux"
 
-import { SaveOutlined, UploadOutlined } from "@mui/icons-material"
+import { DeleteOutline, SaveOutlined, UploadOutlined } from "@mui/icons-material"
 import { Button, Grid, IconButton, TextField, Typography } from "@mui/material"
 import { ImageGalleryList } from "./ImageGallery"
 import Swal from "sweetalert2";
@@ -9,7 +9,7 @@ import 'sweetalert2/dist/sweetalert2.css';
 
 import { useForm } from '../../hooks';
 import { setActiveNote, updateNote } from "../../store/journal/journalSlice";
-import { startSavingNote, startUploadingFiles } from "../../store/journal/thunks";
+import { startDeleteNote, startSavingNote, startUploadingFiles } from "../../store/journal/thunks";
 
 
 export const NoteView = () => {
@@ -49,6 +49,10 @@ export const NoteView = () => {
         dispatch( startUploadingFiles(target.files) );
     }
 
+    const onDeleteNote = () => {
+        dispatch( startDeleteNote() );
+    }
+
 
   return (
     <Grid container 
@@ -56,6 +60,7 @@ export const NoteView = () => {
         justifyContent={'space-between'} 
         direction={'row'} 
         sx={{ mb:1 }}
+        className="animate__animated animate__fadeIn animate__faster"
     >
         <Grid item>
             <Typography fontSize={39} fontWeight={'light'}>
@@ -77,16 +82,19 @@ export const NoteView = () => {
                 disabled={isSaving}
                 onClick={ () => fileInputRef.current.click() }
             >
-                <UploadOutlined/>
+                <Button>
+                    <UploadOutlined sx={{ fontSize: 24, mr: 1 }}  />
+                    Upload
+                </Button>
             </IconButton>
-
+            
             <Button 
                 color="primary" 
                 sx={{ padding:2 }}
                 onClick={onSaveNote}
                 disabled={isSaving}
             > 
-                <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
+                <SaveOutlined sx={{ fontSize: 24, mr: 1 }} />
                 Save
             </Button>
         </Grid>
@@ -114,7 +122,20 @@ export const NoteView = () => {
                 value={body}
                 onChange={onInputChange}
             />
-            <ImageGalleryList/>
+            <Grid container justifyContent={'end'}>
+                <Button
+                    onClick={onDeleteNote}
+                    sx={{ mt: 2, padding:2 }}
+                    color="error"
+                >
+                    <DeleteOutline  sx={{ fontSize: 24, mr: 1 }} />
+                    Delete
+                </Button>
+            </Grid>
+            
+            {/* Image Gallery */}
+            <ImageGalleryList images={ activeNote.imageUrls } />
+
         </Grid>
     </Grid>
   )
