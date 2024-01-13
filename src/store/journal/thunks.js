@@ -1,8 +1,9 @@
 import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { cloudFirestore } from "../../firebase/config";
 
-import { addEmptyNote, createNewNote, setActiveNote, setNotes, setSavingNote } from "./journalSlice";
+import { addEmptyNote, createNewNote, setActiveNote, setNotes, setPhotoActiveNote, setSavingNote } from "./journalSlice";
 import { loadJournalNotes } from "../../helpers";
+import { fileUpload } from "../../helpers/filesUpload";
 
 export const startNewNote = () => {
     return async( dispatch, getState ) => {
@@ -50,5 +51,25 @@ export const startSavingNote = () => {
 
         const documRef = doc( cloudFirestore, `${uid}/journal/notes/${activeNote.id}` );  // referencia al doc en firestore
         await setDoc( documRef, noteFireStore, { merge: true });  //
+    }
+}
+
+export const startUploadingFiles = ( files = [] ) => {
+    return async( dispatch ) => {
+        dispatch( setSavingNote() );  // block the buttons... app en estado de carga 
+        
+        // code to UPLOAD to Cloudinary...
+        const fileUploadPromises = [];
+        for (const file of files) {
+            fileUploadPromises.push( fileUpload(file) );
+        }
+        // files.map( file => fileUpload(file) );  // async... parallel
+        const photoURLs = await Promise.all(fileUploadPromises);
+          // sync... secuential
+        // files.forEach( async(file) => {
+        //     await fileUpload(file);
+        // })  
+        dispatch( setPhotoActiveNote(photoURLs) );
+
     }
 }
